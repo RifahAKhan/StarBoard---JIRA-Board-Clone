@@ -32,3 +32,40 @@ databaseChangeLog:
             incrementBy: 1
             minValue: 1
             sequenceName: issue_id_seq
+  - changeSet:
+      id: add-columns-to-issue-1
+      author: Sindhu
+      changes:
+        - addColumn:
+            tableName: issue
+            columns:
+              - column:
+                  name: issue_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: labels
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: story_points
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: assignee
+                  type: int
+                  constraints:
+                    nullable: false

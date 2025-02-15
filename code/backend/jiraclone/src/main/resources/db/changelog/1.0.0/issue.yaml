@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-issue-1
+      author: Spandana
+      changes:
+        - createTable:
+            tableName: issue
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(225)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-issueSequence-1
+      author: Spandana
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: issue_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: issue_id_seq

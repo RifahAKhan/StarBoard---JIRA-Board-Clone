@@ -69,3 +69,8 @@ databaseChangeLog:
                   type: int
                   constraints:
                     nullable: false
+              - column:
+                  name: project
+                  type: varchar(255)
+                  constraints:
+                      nullable: false

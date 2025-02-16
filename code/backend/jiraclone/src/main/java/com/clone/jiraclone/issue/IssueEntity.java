@@ -2,12 +2,18 @@ package com.clone.jiraclone.issue;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Entity(name = "issue")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class IssueEntity {
 
     @Id
@@ -37,5 +43,8 @@ public class IssueEntity {
 
     @Column(nullable = false)
     private int assignee;
+
+    @Column(nullable = false)
+    private String project;
 
 }

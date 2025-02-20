@@ -1,13 +1,10 @@
 package com.clone.jiraclone.issue;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 @Entity(name = "issue")
 @Data
@@ -42,9 +39,11 @@ public class IssueEntity {
     private String storyPoints;
 
     @Column(nullable = false)
-    private int assignee;
+    private String assignee;
 
     @Column(nullable = false)
-    private String project;
+    private String projectName;
 
+    @Column(nullable = false, unique = true)
+    private Long projectId;
 }

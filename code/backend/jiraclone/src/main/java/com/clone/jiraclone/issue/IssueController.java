@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -56,5 +58,22 @@ public class IssueController {
                 .map(issue -> ResponseEntity.ok("Issue has been successfully edited"))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    @Operation(summary = "Get all issues")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved all issues", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IssueEntity.class))}),
+            @ApiResponse(responseCode = "404", description = "No issues found", content = @Content)
+    })
+    @GetMapping("/all")
+    public ResponseEntity<List<IssueEntity>> getAllIssues() {
+        List<IssueEntity> issues = issueService.getAllProjects();
+        if (issues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(issues);
+    }
+
+
+
 
 }

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-issue-1
+      id: create-issue-table
       author: Spandana
       changes:
         - createTable:
@@ -14,31 +14,15 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: description
-                  type: varchar(225)
+                  name: project_id
+                  type: int
                   constraints:
                     nullable: false
-
-  - changeSet:
-      id: create-issueSequence-1
-      author: Spandana
-      preConditions:
-        - onFail: MARK_RAN
-        - not:
-            - sequenceExists:
-                sequenceName: issue_id_seq
-      changes:
-        - createSequence:
-            incrementBy: 1
-            minValue: 1
-            sequenceName: issue_id_seq
-  - changeSet:
-      id: add-columns-to-issue-1
-      author: Sindhu
-      changes:
-        - addColumn:
-            tableName: issue
-            columns:
+              - column:
+                  name: project_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: issue_type
                   type: varchar(255)
@@ -66,11 +50,29 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: assignee
-                  type: int
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
-                  name: project
+                  name: description
                   type: varchar(255)
                   constraints:
                       nullable: false
+        - addUniqueConstraint:
+            tableName: issue
+            columnNames: project_id
+            constraintName: unique_project_id
+
+  - changeSet:
+      id: create-issueSequence-1
+      author: Spandana
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: issue_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: issue_id_seq

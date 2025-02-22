@@ -1,0 +1,15 @@
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/jiraClone
+    username: postgres
+    password: spandana
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml  # Path to the changelog file
+    default-schema: public  # Optional: Set the default schema for the changes
+    drop-first: false  # Optional: Whether to drop the schema before updating

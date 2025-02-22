@@ -29,6 +29,8 @@ public class IssueService {
                 .assignee(issue.getAssignee())
                 .projectName(issue.getProjectName())
                 .projectId(issue.getProjectId())
+                .sprint(issue.getSprint())
+                .reporter(issue.getReporter())
                 .build();
         return issueRepository.save(newIssue);
     }
@@ -54,10 +56,15 @@ public class IssueService {
             issue.setStoryPoints(updatedIssue.getStoryPoints());
             issue.setAssignee(updatedIssue.getAssignee());
             issue.setProjectName(updatedIssue.getProjectName());
+            issue.setSprint(updatedIssue.getSprint());
+            issue.setReporter(updatedIssue.getReporter());
             return issueRepository.save(issue);
         });
     }
     public List<IssueEntity> getAllProjects() {
         return issueRepository.findAll();
+    }
+    public List<IssueEntity> getIssuesByAssignee(String assignee) {
+        return issueRepository.findByAssignee(assignee);
     }
 }

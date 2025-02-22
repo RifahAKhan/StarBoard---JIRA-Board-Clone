@@ -54,10 +54,26 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: created_date
+                  type: TIMESTAMP
+              - column:
+                  name: modified_date
+                  type: TIMESTAMP
+              - column:
                   name: description
                   type: varchar(255)
                   constraints:
                       nullable: false
+              - column:
+                  name: sprint
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reporter
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
         - addUniqueConstraint:
             tableName: issue
             columnNames: project_id

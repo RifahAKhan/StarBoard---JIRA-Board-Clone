@@ -2,6 +2,7 @@ package com.clone.jiraclone.issue;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,17 @@ public class IssueController {
             @ApiResponse(responseCode = "200", description = "Issue has been successfully created", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content)
     })
+//    @PostMapping("/create-issue")
+//    public IssueEntity createIssue(@RequestBody IssueEntity issue, Authentication authentication) {
+//        // Extract the username from the Authentication object
+//        String reporter = authentication.getName();  // This gives the username of the authenticated user
+//
+//        // Set the reporter field to the authenticated user's name
+//        issue.setReporter(reporter);
+//
+//        // Create the issue using the service and return the saved issue
+//        return issueService.createIssue(issue);
+//    }
     @PostMapping
     public ResponseEntity<String> createIssue(@RequestBody IssueEntity issue) {
         issueService.createIssue(issue);
@@ -72,8 +84,21 @@ public class IssueController {
         }
         return ResponseEntity.ok(issues);
     }
-
-
-
-
+    @Operation(summary = "Get issues by assignee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully retrieved issues for the assignee",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IssueEntity.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "No issues found for the given assignee",
+                    content = @Content)
+    })
+    @GetMapping("/assignee/{assignee}")
+    public ResponseEntity<List<IssueEntity>> getIssuesByAssignee(@PathVariable String assignee) {
+        List<IssueEntity> issues = issueService.getIssuesByAssignee(assignee);
+        if (issues.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(issues);
+        }
+        return ResponseEntity.ok(issues);
+    }
 }

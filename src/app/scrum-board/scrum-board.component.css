@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.create-btn {
+  background: blue;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}

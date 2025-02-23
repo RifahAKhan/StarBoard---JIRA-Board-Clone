@@ -1,1 +1,135 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Top Bar (Header) */
+.top-bar {
+  background-color: #1d3557;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-bar img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.top-bar h1 {
+  font-size: 20px;
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* Main Container */
+.container {
+  padding: 20px;
+}
+
+/* Project Cards */
+.project-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.project-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+}
+
+.project-card h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.project-card p {
+  font-size: 14px;
+  color: #555;
+}
+
+.project-card button {
+  background-color: #1d3557;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+}
+
+.project-card button:hover {
+  background-color: #457b9d;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #343a40;
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background 0.3s ease-in-out;
+}
+
+.sidebar a:hover {
+  background-color: #495057;
+}
+
+/* Scrum Board Content */
+.main-content {
+  margin-left: 220px;
+  padding: 20px;
+}
+
+.main-content p {
+  font-size: 18px;
+  color: #333;
+}
+
+/* Create Button */
+.create-btn {
+  background-color: #1d3557;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background 0.3s ease-in-out;
+  margin-right: 10px;
+}
+
+.create-btn:hover {
+  background-color: #457b9d;
+}

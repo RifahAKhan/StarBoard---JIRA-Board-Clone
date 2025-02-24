@@ -1,4 +1,4 @@
-package com.clone.jiraclone.issue;
+package com.clone.jiraclone.utils;
 
 public enum IssueType {
     BUG,

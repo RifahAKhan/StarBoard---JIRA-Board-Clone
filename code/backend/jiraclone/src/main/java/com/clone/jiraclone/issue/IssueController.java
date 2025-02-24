@@ -1,18 +1,16 @@
 package com.clone.jiraclone.issue;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/issues")
@@ -38,7 +36,7 @@ public class IssueController {
 //        return issueService.createIssue(issue);
 //    }
     @PostMapping
-    public ResponseEntity<String> createIssue(@RequestBody IssueEntity issue) {
+    public ResponseEntity<String> createIssue(@RequestBody IssueDTO issue) {
         issueService.createIssue(issue);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Issue has been successfully created");
@@ -51,8 +49,8 @@ public class IssueController {
             @ApiResponse(responseCode = "404", description = "Issue not found", content = @Content)
     })
     @GetMapping("/project/{id}")
-    public ResponseEntity<IssueEntity> getProjectById(@PathVariable Long id) {
-        return issueService.getProjectById(id)
+    public ResponseEntity<IssueDTO> getProjectById(@PathVariable Long id) {
+        return issueService.getIssueByProjectId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -65,7 +63,7 @@ public class IssueController {
             @ApiResponse(responseCode = "404", description = "Issue not found", content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateIssue(@PathVariable Long id, @RequestBody IssueEntity updatedIssue) {
+    public ResponseEntity<String> updateIssue(@PathVariable Long id, @RequestBody IssueDTO updatedIssue) {
         return issueService.updateIssue(id, updatedIssue)
                 .map(issue -> ResponseEntity.ok("Issue has been successfully edited"))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -77,8 +75,8 @@ public class IssueController {
             @ApiResponse(responseCode = "404", description = "No issues found", content = @Content)
     })
     @GetMapping("/all")
-    public ResponseEntity<List<IssueEntity>> getAllIssues() {
-        List<IssueEntity> issues = issueService.getAllProjects();
+    public ResponseEntity<List<IssueDTO>> getAllIssues() {
+        List<IssueDTO> issues = issueService.getAllProjects();
         if (issues.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -94,8 +92,8 @@ public class IssueController {
                     content = @Content)
     })
     @GetMapping("/assignee/{assignee}")
-    public ResponseEntity<List<IssueEntity>> getIssuesByAssignee(@PathVariable String assignee) {
-        List<IssueEntity> issues = issueService.getIssuesByAssignee(assignee);
+    public ResponseEntity<List<IssueDTO>> getIssuesByAssignee(@PathVariable String assignee) {
+        List<IssueDTO> issues = issueService.getIssuesByAssignee(assignee);
         if (issues.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(issues);
         }

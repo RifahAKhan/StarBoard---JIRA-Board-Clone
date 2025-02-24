@@ -1,5 +1,9 @@
 package com.clone.jiraclone.issue;
 
+import com.clone.jiraclone.utils.IssueType;
+import com.clone.jiraclone.utils.Priority;
+import com.clone.jiraclone.utils.Status;
+import com.clone.jiraclone.utils.StatusLabel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -74,4 +78,14 @@ public class IssueEntity {
     protected void onUpdate() {
         modifiedDate = LocalDateTime.now();
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusLabel statusLabel;
+
+
 }

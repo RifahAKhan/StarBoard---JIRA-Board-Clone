@@ -92,3 +92,36 @@ databaseChangeLog:
             incrementBy: 1
             minValue: 1
             sequenceName: issue_id_seq
+
+  - changeSet:
+     id: add-status-columns-to-issue-1
+     author: Spandana
+     changes:
+      - addColumn:
+         tableName: issue
+         columns:
+          - column:
+             name: status
+             type: varchar(255)
+             defaultValue: 'TO_DO'
+             constraints:
+              nullable: false
+          - column:
+             name: status_label
+             type: varchar(255)
+             defaultValue: 'TO_DO'
+             constraints:
+              nullable: false
+
+  - changeSet:
+      id: remove-default-values-status-columns-1
+      author: Spandana
+      changes:
+       - modifyDataType:
+          tableName: issue
+          columnName: status
+          newDataType: varchar(255)
+       - modifyDataType:
+          tableName: issue
+          columnName: status_label
+          newDataType: varchar(255)

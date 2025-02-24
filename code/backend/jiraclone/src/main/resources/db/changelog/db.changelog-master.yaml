@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/1.0.0/issue.yaml
+  - include:
+      file: db/changelog/1.0.0/subtask.yaml
+  - include:
+      file: db/changelog/1.0.0/subtaskcomment.yaml

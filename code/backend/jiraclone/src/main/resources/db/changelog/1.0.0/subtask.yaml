@@ -1,0 +1,165 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-subtask-table-1
+      author: Spandana
+      changes:
+        - createTable:
+            tableName: subtask
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: issue_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: due_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: assignee
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: labels
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: story_points
+                  type: int
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: subtask
+            baseColumnNames: issue_id
+            referencedTableName: issue
+            referencedColumnNames: id
+            constraintName: fk_subtask_issue
+
+  - changeSet:
+      id: subtask-id-seq-1
+      author: Spandana
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: subtask_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: subtask_id_seq
+
+  - changeSet:
+     id: add-audit-columns-to-subtask-1
+     author: Spandana
+     changes:
+      - addColumn:
+          tableName: subtask
+          columns:
+           - column:
+              name: created_by
+              type: varchar(255)
+              defaultValue: 'system'
+              constraints:
+               nullable: false
+           - column:
+              name: updated_by
+              type: varchar(255)
+              constraints:
+               nullable: true
+           - column:
+              name: created_date
+              type: timestamp
+              defaultValueComputed: CURRENT_TIMESTAMP
+              constraints:
+               nullable: false
+           - column:
+              name: updated_date
+              type: timestamp
+              constraints:
+               nullable: true
+
+  - changeSet:
+      id: update-existing-rows-subtask-1
+      author: Spandana
+      changes:
+       - update:
+          tableName: subtask
+          columns:
+           - column:
+              name: created_by
+              value: 'system'
+           - column:
+              name: created_date
+              valueDate: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: remove-default-values-subtask-1
+      author: Spandana
+      changes:
+       - modifyDataType:
+          tableName: subtask
+          columnName: created_by
+          newDataType: varchar(255)
+       - modifyDataType:
+          tableName: subtask
+          columnName: created_date
+          newDataType: timestamp
+
+  - changeSet:
+      id: add-status-columns-to-subtask-1
+      author: Spandana
+      changes:
+       - addColumn:
+          tableName: subtask
+          columns:
+           - column:
+              name: status
+              type: varchar(255)
+              defaultValue: 'TO_DO'
+              constraints:
+               nullable: false
+           - column:
+              name: status_label
+              type: varchar(255)
+              defaultValue: 'TO_DO'
+              constraints:
+               nullable: false
+
+  - changeSet:
+      id: remove-default-values-status-columns-1
+      author: Spandana
+      changes:
+       - modifyDataType:
+          tableName: subtask
+          columnName: status
+          newDataType: varchar(255)
+       - modifyDataType:
+          tableName: subtask
+          columnName: status_label
+          newDataType: varchar(255)

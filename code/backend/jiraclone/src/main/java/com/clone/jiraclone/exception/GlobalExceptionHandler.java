@@ -17,4 +17,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleProjectIdAndNameNotEditableException(ProjectIdAndNameNotEditableException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(IssueNotFoundException.class)
+    public ResponseEntity<String> handleIssueNotFoundException(IssueNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(SubtaskNotFoundException.class)
+    public ResponseEntity<String> handleSubtaskNotFoundException(SubtaskNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(SubtaskCommentNotFoundException.class)
+    public ResponseEntity<String> handleSubtaskCommentNotFoundException(SubtaskCommentNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
 }

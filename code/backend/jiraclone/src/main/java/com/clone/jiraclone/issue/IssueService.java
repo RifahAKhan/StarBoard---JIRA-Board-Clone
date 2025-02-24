@@ -1,5 +1,7 @@
 package com.clone.jiraclone.issue;
 
+import com.clone.jiraclone.comment.CommentDTO;
+import com.clone.jiraclone.comment.CommentService;
 import com.clone.jiraclone.exception.ProjectIdAndNameNotEditableException;
 import com.clone.jiraclone.subtask.SubtaskDTO;
 import com.clone.jiraclone.subtask.SubtaskRepository;
@@ -24,6 +26,9 @@ public class IssueService {
 
     @Autowired
     private SubtaskService subtaskService;
+
+    @Autowired
+    private CommentService commentService;
 
 //    public IssueEntity createIssue(IssueEntity issue) {
 //        Optional<IssueEntity> existingIssue = issueRepository.findByProjectId(issue.getProjectId());
@@ -94,7 +99,7 @@ public class IssueService {
     }
 
     public Optional<IssueDTO> getIssueByProjectId(Long id) {
-        return issueRepository.findById(id).map(this::convertToDTOWithSubtasks);
+        return issueRepository.findById(id).map(this::convertToDTOWithSubtasksAndComments);
     }
 
     public Optional<IssueDTO> updateIssue(Long id, IssueDTO updatedIssueDTO) {
@@ -121,18 +126,24 @@ public class IssueService {
 
     public List<IssueDTO> getAllProjects() {
         return issueRepository.findAll().stream()
-                .map(this::convertToDTOWithSubtasks)
+                .map(this::convertToDTOWithSubtasksAndComments)
                 .collect(Collectors.toList());
     }
 
-    private IssueDTO convertToDTOWithSubtasks(IssueEntity issue) {
+
+    private IssueDTO convertToDTOWithSubtasksAndComments(IssueEntity issue) {
         IssueDTO issueDTO = convertToDTO(issue);
         List<SubtaskDTO> subtasks = subtaskRepository.findByIssueId(issue.getId()).stream()
                 .map(subtaskService::convertSubtaskToDTO)
                 .collect(Collectors.toList());
         issueDTO.setSubtasks(subtasks);
+
+        List<CommentDTO> comments = commentService.getCommentsByProjectId(issue.getProjectId()); // Fetch comments
+        issueDTO.setComments(comments); // Set comments
+
         return issueDTO;
     }
+
 
     public List<IssueDTO> getIssuesByAssignee(String assignee) {
         return issueRepository.findByAssignee(assignee).stream()

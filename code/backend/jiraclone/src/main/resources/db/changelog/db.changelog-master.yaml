@@ -5,3 +5,6 @@ databaseChangeLog:
       file: db/changelog/1.0.0/subtask.yaml
   - include:
       file: db/changelog/1.0.0/subtaskcomment.yaml
+  - include:
+      file: db/changelog/1.0.0/comment.yaml
+

@@ -163,3 +163,17 @@ databaseChangeLog:
           tableName: subtask
           columnName: status_label
           newDataType: varchar(255)
+
+  - changeSet:
+      id: modify-foreign-key-subtask-1
+      author: Spandana
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: subtask
+            constraintName: fk_subtask_issue
+        - addForeignKeyConstraint:
+            baseTableName: subtask
+            baseColumnNames: issue_id
+            referencedTableName: issue
+            referencedColumnNames: project_id
+            constraintName: fk_subtask_issue_corrected

@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-comment-table
+      author: Sindhu
+      changes:
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: comment_text
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+              - column:
+                  name: project_id
+                  type: int
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: project_id
+            referencedTableName: issue
+            referencedColumnNames: project_id
+            constraintName: fk_comment_project_id
+  - changeSet:
+      id: create-commentSequence-1
+      author: Sindhu
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: comment_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: comment_id_seq

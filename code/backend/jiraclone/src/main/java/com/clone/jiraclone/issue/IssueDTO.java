@@ -1,6 +1,7 @@
 package com.clone.jiraclone.issue;
 
 
+import com.clone.jiraclone.comment.CommentDTO;
 import com.clone.jiraclone.subtask.SubtaskDTO;
 import com.clone.jiraclone.utils.IssueType;
 import com.clone.jiraclone.utils.Priority;
@@ -30,4 +31,5 @@ public class IssueDTO {
     private Status status;
     private StatusLabel statusLabel;
     private List<SubtaskDTO> subtasks;
+    private List<CommentDTO> comments;
 }

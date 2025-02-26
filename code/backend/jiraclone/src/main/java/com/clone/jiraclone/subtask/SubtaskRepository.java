@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface SubtaskRepository extends JpaRepository<SubtaskEntity, Long> {
-    List<SubtaskEntity> findByIssueId(int issueId);
+    List<SubtaskEntity> findByIssueId(Long issueId);
 }

@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-subtask-activity-table
+      author: Spandana
+      changes:
+        - createTable:
+            tableName: subtask_activity
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: issue_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: subtask_activity
+            baseColumnNames: issue_id
+            referencedTableName: subtask
+            referencedColumnNames: id
+            constraintName: fk_subtask_activity_subtask_id
+
+  - changeSet:
+      id: create-subtaskactivitySequence-1
+      author: Spandana
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: subtask_activity_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: subtask_activity_id_seq
+
+  - changeSet:
+      id: add-audit-columns-to-subtask-activity
+      author: Spandana
+      changes:
+        - addColumn:
+            tableName: subtask_activity
+            columns:
+              - column:
+                  name: updated_by
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_date
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true

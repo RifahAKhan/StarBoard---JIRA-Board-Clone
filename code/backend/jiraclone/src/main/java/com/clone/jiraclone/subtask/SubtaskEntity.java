@@ -60,6 +60,9 @@ public class SubtaskEntity {
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 
+    @Column(name = "reporter", nullable = false)
+    private String reporter;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;

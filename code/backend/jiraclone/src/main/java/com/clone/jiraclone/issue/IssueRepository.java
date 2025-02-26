@@ -11,4 +11,6 @@ public interface IssueRepository extends JpaRepository<IssueEntity, Long> {
     Optional<IssueEntity> findByProjectId(Long projectId);
 
     List<IssueEntity> findByAssignee(String assignee);
+
+    boolean existsByProjectId(Long issueId);
 }

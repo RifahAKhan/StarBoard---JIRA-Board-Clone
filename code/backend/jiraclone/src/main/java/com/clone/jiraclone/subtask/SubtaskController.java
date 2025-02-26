@@ -1,5 +1,7 @@
 package com.clone.jiraclone.subtask;
 
+import com.clone.jiraclone.subtaskactivity.SubtaskActivityService;
+import com.clone.jiraclone.utils.ActivityType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +20,9 @@ public class SubtaskController {
 
     @Autowired
     private SubtaskService subtaskService;
+
+    @Autowired
+    private SubtaskActivityService subtaskActivityService;
 
     @Operation(summary = "Create a new subtask")
     @ApiResponses(value = {

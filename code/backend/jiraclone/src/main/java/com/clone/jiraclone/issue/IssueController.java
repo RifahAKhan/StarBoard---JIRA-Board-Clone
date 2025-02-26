@@ -1,5 +1,8 @@
 package com.clone.jiraclone.issue;
 
+import com.clone.jiraclone.issueactivity.IssueActivityRepository;
+import com.clone.jiraclone.issueactivity.IssueActivityService;
+import com.clone.jiraclone.utils.ActivityType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +21,9 @@ public class IssueController {
 
     @Autowired
     private IssueService issueService;
+
+    @Autowired
+    private IssueActivityService issueActivityService;
 
     @Operation(summary = "Create a new issue")
     @ApiResponses(value = {
@@ -38,6 +44,7 @@ public class IssueController {
     @PostMapping
     public ResponseEntity<String> createIssue(@RequestBody IssueDTO issue) {
         issueService.createIssue(issue);
+        issueActivityService.logActivity(ActivityType.ISSUE_CREATED, "Issue " + issue.getProjectName() + " created", issue.getReporter(), issue.getProjectId());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Issue has been successfully created");
     }
@@ -48,14 +55,12 @@ public class IssueController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the issue", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = IssueEntity.class))}),
             @ApiResponse(responseCode = "404", description = "Issue not found", content = @Content)
     })
-    @GetMapping("/project/{id}")
-    public ResponseEntity<IssueDTO> getProjectById(@PathVariable Long id) {
-        return issueService.getIssueByProjectId(id)
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<IssueDTO> getProjectById(@PathVariable Long projectId) {
+        return issueService.getIssueByProjectId(projectId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
-
 
     @Operation(summary = "Update an issue by ID")
     @ApiResponses(value = {

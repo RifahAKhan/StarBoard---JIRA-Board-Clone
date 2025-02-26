@@ -177,3 +177,17 @@ databaseChangeLog:
             referencedTableName: issue
             referencedColumnNames: project_id
             constraintName: fk_subtask_issue_corrected
+
+  - changeSet:
+      id: add-reporter-column-to-subtask-1
+      author: Spandana
+      changes:
+        - addColumn:
+            tableName: subtask
+            columns:
+              - column:
+                  name: reporter
+                  type: varchar(255)
+                  defaultValue: 'system'
+                  constraints:
+                    nullable: false

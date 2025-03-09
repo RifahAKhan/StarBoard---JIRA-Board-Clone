@@ -22,7 +22,7 @@ public class IssueActivityService {
         issueActivityEntity.setDescription(issueActivityDTO.getDescription());
         issueActivityEntity.setType(ActivityType.valueOf(String.valueOf(issueActivityDTO.getType())));
         issueActivityEntity.setUserName(issueActivityDTO.getUserName());
-        issueActivityEntity.setTimestamp(issueActivityDTO.getTimestamp());
+        issueActivityEntity.setTimestamp(issueActivityDTO.getCreatedDate());
         return issueActivityEntity;
     }
 
@@ -33,7 +33,7 @@ public class IssueActivityService {
         issueActivityDTO.setDescription(issueActivity.getDescription());
         issueActivityDTO.setType(ActivityType.valueOf(issueActivity.getType().name()));
         issueActivityDTO.setUserName(issueActivity.getUserName());
-        issueActivityDTO.setTimestamp(issueActivity.getTimestamp());
+        issueActivityDTO.setCreatedDate(issueActivity.getTimestamp());
         return issueActivityDTO;
     }
 //    public List<IssueActivityDTO> getAllIssueActivity(Long issueId) {

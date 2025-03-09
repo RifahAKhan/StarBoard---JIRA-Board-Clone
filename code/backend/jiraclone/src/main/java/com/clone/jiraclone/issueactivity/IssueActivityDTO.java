@@ -10,7 +10,7 @@ public class IssueActivityDTO {
     private ActivityType type;
     private String description;
     private String userName;
-    private LocalDateTime timestamp;
+    private LocalDateTime createdDate;
     private Long id;
     private Long issueId;
 

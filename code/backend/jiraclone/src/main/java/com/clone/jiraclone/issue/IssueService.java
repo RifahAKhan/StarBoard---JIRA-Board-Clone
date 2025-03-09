@@ -114,7 +114,7 @@ public Optional<IssueDTO> updateIssue(Long id, IssueDTO updatedIssueDTO) {
         issueDTO.setComments(comments); // Set comments
 
         List<IssueActivityDTO> activities = issueActivityService.getAllIssueActivity(issue.getProjectId());
-        activities.sort(Comparator.comparing(IssueActivityDTO::getTimestamp).reversed());
+        activities.sort(Comparator.comparing(IssueActivityDTO::getCreatedDate).reversed());
         issueDTO.setIssueActivities(activities);
 
         List<Object> all= new ArrayList<>();

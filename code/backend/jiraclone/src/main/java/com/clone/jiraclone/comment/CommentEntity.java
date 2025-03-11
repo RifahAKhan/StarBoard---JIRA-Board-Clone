@@ -18,7 +18,7 @@ public class CommentEntity {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
     @Column(name = "project_id", nullable = false)

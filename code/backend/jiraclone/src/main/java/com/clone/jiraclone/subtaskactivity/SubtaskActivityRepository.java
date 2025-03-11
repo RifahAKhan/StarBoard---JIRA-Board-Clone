@@ -9,4 +9,6 @@ import java.util.List;
 public interface SubtaskActivityRepository extends JpaRepository<SubtaskActivityEntity, Long> {
 
     List<SubtaskActivityEntity> findByIssueId(Long subtaskId);
+
+    void deleteByIssueIdIn(List<Long> subtaskIds);
 }

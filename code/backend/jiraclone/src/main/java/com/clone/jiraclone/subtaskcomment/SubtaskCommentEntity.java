@@ -18,6 +18,7 @@ public class SubtaskCommentEntity {
 
     private String content;
     private String createdBy;
+    @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
     private String updatedBy;
     private LocalDateTime updatedDate;

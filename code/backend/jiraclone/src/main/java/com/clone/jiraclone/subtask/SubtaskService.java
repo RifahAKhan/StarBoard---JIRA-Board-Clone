@@ -46,8 +46,8 @@ public class SubtaskService {
         subtask.setCreatedBy("system");
         subtask.setCreatedDate(LocalDateTime.now());
         SubtaskEntity savedSubtask = subtaskRepository.save(subtask);
-        subtaskActivityService.logActivity(ActivityType.SUBTASK_CREATED, "Subtask created", "system", savedSubtask.getId());
-        issueActivityService.logActivity(ActivityType.SUBTASK_CREATED, "Subtask has been created under ID : " + subtaskDTO.getIssueId(),"system", savedSubtask.getIssueId());
+        subtaskActivityService.logActivity(ActivityType.SUBTASK_CREATED, "created Subtask", "system", savedSubtask.getId());
+        issueActivityService.logActivity(ActivityType.SUBTASK_CREATED, "created Subtask under ID : " + subtaskDTO.getIssueId(),"system", savedSubtask.getIssueId());
 
         return convertSubtaskToDTO(savedSubtask);
     }
@@ -62,16 +62,16 @@ public class SubtaskService {
             updatedSubtask.setUpdatedDate(LocalDateTime.now());
 
             if (!subtask.getStatus().equals(updatedSubtaskDTO.getStatus()) && updatedSubtaskDTO.getStatus()!=Status.DONE){
-                subtaskActivityService.logActivity(ActivityType.STATUS_TRANSITION, "Subtask status changed to " + updatedSubtaskDTO.getStatus(), updatedSubtask.getReporter(), subtask.getId());
+                subtaskActivityService.logActivity(ActivityType.STATUS_TRANSITION, "Changed subtask status to : " + updatedSubtaskDTO.getStatus(), updatedSubtask.getReporter(), subtask.getId());
             }
             if(!subtask.getAssignee().equals(updatedSubtaskDTO.getAssignee())) {
-                subtaskActivityService.logActivity(ActivityType.FIELD_CHANGED, "Subtask assignee changed to " + updatedSubtaskDTO.getAssignee(), updatedSubtask.getReporter(), subtask.getId());
+                subtaskActivityService.logActivity(ActivityType.FIELD_CHANGED, "Changed assignee to : " + updatedSubtaskDTO.getAssignee(), updatedSubtask.getReporter(), subtask.getId());
             }
             if(!subtask.getPriority().equals(updatedSubtaskDTO.getPriority())) {
-                subtaskActivityService.logActivity(ActivityType.FIELD_CHANGED, "Subtask priority changed to " + updatedSubtaskDTO.getPriority(), updatedSubtask.getReporter(), subtask.getId());
+                subtaskActivityService.logActivity(ActivityType.FIELD_CHANGED, "Changed priority to : " + updatedSubtaskDTO.getPriority(), updatedSubtask.getReporter(), subtask.getId());
             }
             if (Status.DONE.equals(updatedSubtaskDTO.getStatus()) && !subtask.getStatus().equals(updatedSubtaskDTO.getStatus())) {
-                subtaskActivityService.logActivity(ActivityType.SUBTASK_RESOLVED, "Subtask resolved", updatedSubtask.getReporter(), subtask.getId());
+                subtaskActivityService.logActivity(ActivityType.SUBTASK_RESOLVED, "marked Subtask as", updatedSubtask.getReporter(), subtask.getId());
             }
             SubtaskEntity savedSubtask = subtaskRepository.save(updatedSubtask);
             return convertSubtaskToDTO(savedSubtask);

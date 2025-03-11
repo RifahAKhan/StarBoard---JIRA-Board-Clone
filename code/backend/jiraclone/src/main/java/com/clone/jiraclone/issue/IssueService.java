@@ -1,13 +1,18 @@
 package com.clone.jiraclone.issue;
 
 import com.clone.jiraclone.comment.CommentDTO;
+import com.clone.jiraclone.comment.CommentRepository;
 import com.clone.jiraclone.comment.CommentService;
 import com.clone.jiraclone.exception.ProjectIdAndNameNotEditableException;
 import com.clone.jiraclone.issueactivity.IssueActivityDTO;
+import com.clone.jiraclone.issueactivity.IssueActivityRepository;
 import com.clone.jiraclone.issueactivity.IssueActivityService;
 import com.clone.jiraclone.subtask.SubtaskDTO;
+import com.clone.jiraclone.subtask.SubtaskEntity;
 import com.clone.jiraclone.subtask.SubtaskRepository;
 import com.clone.jiraclone.subtask.SubtaskService;
+import com.clone.jiraclone.subtaskactivity.SubtaskActivityRepository;
+import com.clone.jiraclone.subtaskcomment.SubtaskCommentCommentRepository;
 import com.clone.jiraclone.utils.ActivityType;
 import com.clone.jiraclone.utils.Status;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.clone.jiraclone.exception.ProjectAlreadyExistsException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class IssueService {
@@ -39,54 +45,81 @@ public class IssueService {
     @Autowired
     private IssueActivityService issueActivityService;
 
-    public IssueDTO createIssue(IssueDTO issueDTO) {
-        Optional<IssueEntity> existingIssue = issueRepository.findByProjectId(issueDTO.getProjectId());
-        if (existingIssue.isPresent()) {
-            throw new ProjectAlreadyExistsException("Project with the same id already exists");
-        }
-        IssueEntity issue = convertToEntity(issueDTO);
-        IssueEntity savedIssue = issueRepository.save(issue);
-        return convertToDTO(savedIssue);
-    }
+    @Autowired
+    private CommentRepository commentRepository;
 
+    @Autowired
+    private IssueActivityRepository issueActivityRepository;
+
+    @Autowired
+    private SubtaskCommentCommentRepository subtaskCommentRepository;
+
+    @Autowired
+    private SubtaskActivityRepository subtaskActivityRepository;
+
+
+//    public IssueDTO createIssue(IssueDTO issueDTO) {
+//        Optional<IssueEntity> existingIssue = issueRepository.findByProjectId(issueDTO.getProjectId());
+//        if (existingIssue.isPresent()) {
+//            throw new ProjectAlreadyExistsException("Project with the same id already exists");
+//        }
+//        IssueEntity issue = convertToEntity(issueDTO);
+//        IssueEntity savedIssue = issueRepository.save(issue);
+//        return convertToDTO(savedIssue);
+//    }
+public IssueDTO createIssue(IssueDTO issueDTO) {
+    IssueEntity issue = convertToEntity(issueDTO);
+    issue.setProjectId(generateProjectId());
+    issue.setIsActive(false);
+    IssueEntity savedIssue = issueRepository.save(issue);
+    issueActivityService.logActivity(ActivityType.ISSUE_CREATED, "Created an issue " + issueDTO.getProjectName() , issueDTO.getReporter(), savedIssue.getProjectId());
+    return convertToDTO(savedIssue);
+}
+
+
+    private Long generateProjectId() {
+        // Logic to generate the projectId, e.g., using a sequence or any other method
+        // For example, using a sequence from the database
+        return issueRepository.getNextProjectIdSequence();
+    }
     public Optional<IssueDTO> getIssueByProjectId(Long projectId) {
         return issueRepository.findByProjectId(projectId).map(this::convertToDTOWithSubtasksAndComments);
     }
 
 public Optional<IssueDTO> updateIssue(Long id, IssueDTO updatedIssueDTO) {
     return issueRepository.findById(id).map(issue -> {
-        if (!issue.getProjectId().equals(updatedIssueDTO.getProjectId()) && !issue.getProjectName().equals(updatedIssueDTO.getProjectName())) {
-            throw new ProjectIdAndNameNotEditableException("Project ID and Name are not editable");
-        } else if (!issue.getProjectId().equals(updatedIssueDTO.getProjectId())) {
-            throw new ProjectIdAndNameNotEditableException("Project ID is not editable");
-        } else if (!issue.getProjectName().equals(updatedIssueDTO.getProjectName())) {
-            throw new ProjectIdAndNameNotEditableException("Project Name is not editable");
-        }
+//        if (!issue.getProjectId().equals(updatedIssueDTO.getProjectId()) && !issue.getProjectName().equals(updatedIssueDTO.getProjectName())) {
+//            throw new ProjectIdAndNameNotEditableException("Project ID and Name are not editable");
+//        } else if (!issue.getProjectId().equals(updatedIssueDTO.getProjectId())) {
+//            throw new ProjectIdAndNameNotEditableException("Project ID is not editable");
+//        } else if (!issue.getProjectName().equals(updatedIssueDTO.getProjectName())) {
+//            throw new ProjectIdAndNameNotEditableException("Project Name is not editable");
+//        }
 
             IssueEntity updatedIssue = convertToEntity(updatedIssueDTO);
             updatedIssue.setId(issue.getId());
 
         if (!issue.getStatus().equals(updatedIssueDTO.getStatus()) && updatedIssueDTO.getStatus()!=Status.DONE) {
             issueActivityService.logActivity(ActivityType.STATUS_TRANSITION,
-                    "Transitioned from '" + issue.getStatus() + "' to '" + updatedIssueDTO.getStatus() + "'",
+                    "made Transition from '" + issue.getStatus() + "' to '" + updatedIssueDTO.getStatus() + "'",
                     updatedIssueDTO.getReporter(), issue.getProjectId());
         }
 
         if (!issue.getPriority().equals(updatedIssueDTO.getPriority())) {
             issueActivityService.logActivity(ActivityType.FIELD_CHANGED,
-                    "Priority changed to " + updatedIssueDTO.getPriority(),
+                    "Changed Priority to : " + updatedIssueDTO.getPriority(),
                     updatedIssueDTO.getReporter(), issue.getProjectId());
         }
 
         if (!issue.getAssignee().equals(updatedIssueDTO.getAssignee())) {
             issueActivityService.logActivity(ActivityType.FIELD_CHANGED,
-                    "Assignee changed to " + updatedIssueDTO.getAssignee(),
+                    "Changed Assignee to : " + updatedIssueDTO.getAssignee(),
                     updatedIssueDTO.getReporter(), issue.getProjectId());
         }
 
         if (Status.DONE.equals(updatedIssueDTO.getStatus()) && !issue.getStatus().equals(updatedIssueDTO.getStatus())) {
             issueActivityService.logActivity(ActivityType.ISSUE_RESOLVED,
-                    "Issue resolved as '" + updatedIssueDTO.getStatus() + "'",
+                    "Marked issue as '" + updatedIssueDTO.getStatus() + "'",
                     updatedIssueDTO.getReporter(), issue.getProjectId());
         }
 
@@ -150,6 +183,7 @@ public Optional<IssueDTO> updateIssue(Long id, IssueDTO updatedIssueDTO) {
         issue.setModifiedDate(issueDTO.getModifiedDate());
         issue.setStatus(issueDTO.getStatus());
         issue.setStatusLabel(issueDTO.getStatusLabel());
+        issue.setIsActive(issueDTO.getIsActive());
         return issue;
     }
 
@@ -171,6 +205,42 @@ public Optional<IssueDTO> updateIssue(Long id, IssueDTO updatedIssueDTO) {
         issueDTO.setModifiedDate(issue.getModifiedDate());
         issueDTO.setStatus(issue.getStatus());
         issueDTO.setStatusLabel(issue.getStatusLabel());
+        issueDTO.setIsActive(issue.getIsActive());
         return issueDTO;
     }
+
+    public boolean activateIssues(List<Long> projectIds) {
+        List<IssueEntity> issues = issueRepository.findAllByProjectIdIn(projectIds);
+        if (issues.isEmpty()) {
+            return false;
+        }
+        for (IssueEntity issue : issues) {
+            issue.setIsActive(true);
+        }
+        issueRepository.saveAll(issues);
+        return true;
+    }
+
+
+    @Transactional
+    public boolean deleteActiveIssues(List<Long> projectIds) {
+        List<IssueEntity> issues = issueRepository.findAllByProjectIdInAndIsActiveTrue(projectIds);
+        if (issues.isEmpty()) {
+            return false;
+        }
+
+        // Delete related records in the correct order
+        List<SubtaskEntity> subtasks = subtaskRepository.findAllByIssueIdIn(projectIds);
+        List<Long> subtaskIds = subtasks.stream().map(SubtaskEntity::getId).collect(Collectors.toList());
+
+        subtaskCommentRepository.deleteBySubtaskIdIn(subtaskIds);
+        subtaskActivityRepository.deleteByIssueIdIn(subtaskIds);
+        subtaskRepository.deleteAll(subtasks);
+        commentRepository.deleteByProjectIdIn(projectIds);
+        issueActivityRepository.deleteByIssueIdIn(projectIds);
+        issueRepository.deleteAll(issues);
+
+        return true;
+    }
+
 }

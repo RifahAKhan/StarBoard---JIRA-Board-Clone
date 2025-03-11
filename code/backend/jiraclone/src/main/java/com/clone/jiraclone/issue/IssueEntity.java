@@ -1,9 +1,6 @@
 package com.clone.jiraclone.issue;
 
-import com.clone.jiraclone.utils.IssueType;
-import com.clone.jiraclone.utils.Priority;
-import com.clone.jiraclone.utils.Status;
-import com.clone.jiraclone.utils.StatusLabel;
+import com.clone.jiraclone.utils.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,8 +36,9 @@ public class IssueEntity {
     @Column(nullable = false)
     private String summary;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String labels;
+    private Labels labels;
 
     @Column(nullable = false)
     private String storyPoints;
@@ -51,7 +49,7 @@ public class IssueEntity {
     @Column(nullable = false)
     private String projectName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private Long projectId;
 
     @Column(nullable = false)
@@ -87,5 +85,7 @@ public class IssueEntity {
     @Column(nullable = false)
     private StatusLabel statusLabel;
 
+    @Column(nullable = false)
+    private Boolean isActive;
 
 }

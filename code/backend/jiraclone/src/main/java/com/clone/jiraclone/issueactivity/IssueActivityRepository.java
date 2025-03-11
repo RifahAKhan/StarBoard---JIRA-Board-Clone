@@ -11,4 +11,6 @@ public interface IssueActivityRepository extends JpaRepository<IssueActivityEnti
 
     List<IssueActivityEntity> findByIssueId(Long issueId);
 
+    void deleteByIssueIdIn(List<Long> projectIds);
+
 }

@@ -8,4 +8,6 @@ import java.util.List;
 @Repository
 public interface SubtaskCommentCommentRepository extends JpaRepository<SubtaskCommentEntity, Long> {
     List<SubtaskCommentEntity> findBySubtaskId(Long subtaskId);
+
+    void deleteBySubtaskIdIn(List<Long> subtaskIds);
 }

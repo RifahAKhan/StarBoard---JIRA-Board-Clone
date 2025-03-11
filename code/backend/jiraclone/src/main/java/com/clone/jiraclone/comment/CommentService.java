@@ -16,7 +16,9 @@ public class CommentService {
 
     public CommentDTO addComment(CommentDTO commentDTO) {
         CommentEntity comment = convertToEntity(commentDTO);
+//        System.out.println(LocalDateTime.now());
         comment.setCreatedDate(LocalDateTime.now());
+//        System.out.println(comment.getCreatedDate());
         CommentEntity savedComment = commentRepository.save(comment);
         return convertToDTO(savedComment);
     }

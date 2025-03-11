@@ -4,10 +4,7 @@ package com.clone.jiraclone.issue;
 import com.clone.jiraclone.comment.CommentDTO;
 import com.clone.jiraclone.issueactivity.IssueActivityDTO;
 import com.clone.jiraclone.subtask.SubtaskDTO;
-import com.clone.jiraclone.utils.IssueType;
-import com.clone.jiraclone.utils.Priority;
-import com.clone.jiraclone.utils.Status;
-import com.clone.jiraclone.utils.StatusLabel;
+import com.clone.jiraclone.utils.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,7 +17,7 @@ public class IssueDTO {
     private IssueType issueType;
     private Priority priority;
     private String summary;
-    private String labels;
+    private Labels labels;
     private String storyPoints;
     private String assignee;
     private String projectName;
@@ -35,4 +32,5 @@ public class IssueDTO {
     private List<CommentDTO> comments;
     private List<IssueActivityDTO> issueActivities;
     private List<Object> all;
+    private Boolean isActive;
 }

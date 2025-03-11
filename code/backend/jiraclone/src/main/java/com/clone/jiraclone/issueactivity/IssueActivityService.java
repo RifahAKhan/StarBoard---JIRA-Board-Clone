@@ -49,6 +49,9 @@ public class IssueActivityService {
     }
 
     public void logActivity(ActivityType type, String description, String userName, Long issueId) {
+        if(issueId==null){
+            throw new IllegalArgumentException("Issue Id cannot be null");
+        }
         IssueActivityEntity activity = new IssueActivityEntity();
         activity.setType(type);
         activity.setDescription(description);

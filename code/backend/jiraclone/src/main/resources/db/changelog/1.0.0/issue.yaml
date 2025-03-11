@@ -125,3 +125,84 @@ databaseChangeLog:
           tableName: issue
           columnName: status_label
           newDataType: varchar(255)
+
+
+
+  - changeSet:
+      id: modify-project-id-autoincrement
+      author: Spandana
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: comment
+            constraintName: fk_comment_project_id
+        - dropForeignKeyConstraint:
+            baseTableName: issue_activity
+            constraintName: fk_issue_activity_issue
+        - dropForeignKeyConstraint:
+            baseTableName: subtask
+            constraintName: fk_subtask_issue_corrected
+        - dropUniqueConstraint:
+            tableName: issue
+            constraintName: unique_project_id
+        - dropColumn:
+            tableName: issue
+            columnName: project_id
+        - addColumn:
+            tableName: issue
+            columns:
+              - column:
+                  name: project_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: issue
+            columnNames: project_id
+            constraintName: unique_project_id
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: project_id
+            referencedTableName: issue
+            referencedColumnNames: project_id
+            constraintName: fk_comment_project_id
+        - addForeignKeyConstraint:
+            baseTableName: issue_activity
+            baseColumnNames: issue_id
+            referencedTableName: issue
+            referencedColumnNames: project_id
+            constraintName: fk_issue_activity_issue
+        - addForeignKeyConstraint:
+            baseTableName: subtask
+            baseColumnNames: issue_id
+            referencedTableName: issue
+            referencedColumnNames: project_id
+            constraintName: fk_subtask_issue_corrected
+
+  - changeSet:
+      id: create-project-id-sequence
+      author: Spandana
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: project_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: project_id_seq
+
+  - changeSet:
+      id: add-isactive-column-to-issue
+      author: Spandana
+      changes:
+        - addColumn:
+            tableName: issue
+            columns:
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

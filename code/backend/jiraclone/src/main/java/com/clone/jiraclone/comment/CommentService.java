@@ -28,7 +28,7 @@ public class CommentService {
         if (optionalComment.isPresent()) {
             CommentEntity comment = optionalComment.get();
             comment.setCommentText(commentDTO.getCommentText());
-            comment.setAuthor(commentDTO.getAuthor());
+            comment.setAuthor("Author");
             comment.setProjectId(commentDTO.getProjectId());
             comment.setCreatedDate(commentDTO.getCreatedDate());
             CommentEntity updatedComment = commentRepository.save(comment);
@@ -46,7 +46,7 @@ public class CommentService {
     private CommentEntity convertToEntity(CommentDTO commentDTO) {
         CommentEntity comment = new CommentEntity();
         comment.setCommentText(commentDTO.getCommentText());
-        comment.setAuthor(commentDTO.getAuthor());
+        comment.setAuthor("Author");
         comment.setProjectId(commentDTO.getProjectId());
         return comment;
     }

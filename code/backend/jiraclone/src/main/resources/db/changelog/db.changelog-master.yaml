@@ -11,4 +11,5 @@ databaseChangeLog:
       file: db/changelog/1.0.0/subtaskactivity.yaml
   - include:
       file: db/changelog/1.0.0/issueactivity.yaml
-
+  - include:
+      file: db/changelog/1.0.0/users.yaml

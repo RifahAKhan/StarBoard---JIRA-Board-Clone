@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: users-table
+      author: Sindhu
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: usersSequence-1
+      author: Sindhu
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: user_id_seq
+      changes:
+        - createSequence:
+            incrementBy: 1
+            minValue: 1
+            sequenceName: user_id_seq
